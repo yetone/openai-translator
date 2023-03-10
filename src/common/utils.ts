@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TranslateMode } from '../content_script/translate'
+import { TranslateMode, Provider  } from '../content_script/translate'
 import { IBrowser } from './types'
 
 export interface ISettings {
     apiKeys: string
     apiURL: string
+    apiURLPath: string
+    provider: Provider | 'OpenAI'
     autoTranslate: boolean
     defaultTranslateMode: TranslateMode | 'nop'
     defaultTargetLanguage: string
@@ -12,6 +14,8 @@ export interface ISettings {
 }
 
 export const defaultAPIURL = 'https://api.openai.com'
+export const defaultAPIURLPath = '/v1/chat/completions'
+export const defaultProvider = 'OpenAI'
 
 export const defaultAutoTranslate = false
 export const defaultTargetLanguage = 'zh-Hans'
@@ -26,6 +30,8 @@ export async function getApiKey(): Promise<string> {
 const settingKeys: Record<keyof ISettings, number> = {
     apiKeys: 1,
     apiURL: 1,
+    apiURLPath: 1,
+    provider: 1,
     autoTranslate: 1,
     defaultTranslateMode: 1,
     defaultTargetLanguage: 1,
@@ -42,6 +48,12 @@ export async function getSettings(): Promise<ISettings> {
     }
     if (!settings.apiURL) {
         settings.apiURL = defaultAPIURL
+    }
+    if (!settings.apiURLPath) {
+        settings.apiURLPath = defaultAPIURLPath
+    }
+    if (!settings.provider) {
+        settings.provider = defaultProvider
     }
     if (settings.autoTranslate === undefined || settings.autoTranslate === null) {
         settings.autoTranslate = defaultAutoTranslate

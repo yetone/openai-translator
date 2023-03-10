@@ -11,6 +11,7 @@ import { createForm } from '../components/Form'
 import { Button } from 'baseui/button'
 import './index.css'
 import { TranslateMode } from '../content_script/translate'
+import { Provider } from '../content_script/translate'
 import { Select, Value, Option } from 'baseui/select'
 import { Checkbox } from 'baseui/checkbox'
 import { supportLanguages } from '../content_script/lang'
@@ -55,6 +56,11 @@ interface ITranslateModeSelectorProps {
 interface AutoTranslateCheckboxProps {
     value?: boolean
     onChange?: (value: boolean) => void
+}
+
+interface IProviderSelectorProps {
+    value?: Provider | 'OpenAI'
+    onChange?: (value: Provider | 'OpenAI') => void
 }
 
 function TranslateModeSelector(props: ITranslateModeSelectorProps) {
@@ -102,6 +108,35 @@ function AutoTranslateCheckbox(props: AutoTranslateCheckboxProps) {
     )
 }
 
+function ProviderSelector(props: IProviderSelectorProps) {
+    return (
+        <Select
+            size='compact'
+            searchable={false}
+            clearable={false}
+            value={
+                props.value && [
+                    {
+                        id: props.value,
+                    },
+                ]
+            }
+            onChange={(params) => {
+                props.onChange?.(params.value[0].id as Provider | 'OpenAI')
+            }}
+            options={
+                [
+                    { label: 'OpenAI', id: 'OpenAI' },
+                    { label: 'Azure', id: 'Azure' },
+                ] as {
+                    label: string
+                    id: Provider
+                }[]
+            }
+        />
+    )
+}
+
 const engine = new Styletron()
 
 const { Form, FormItem, useForm } = createForm<utils.ISettings>()
@@ -115,6 +150,8 @@ export function Settings(props: IPopupProps) {
     const [values, setValues] = useState<utils.ISettings>({
         apiKeys: '',
         apiURL: utils.defaultAPIURL,
+        apiURLPath: utils.defaultAPIURLPath,
+        provider: utils.defaultProvider,
         autoTranslate: utils.defaultAutoTranslate,
         defaultTranslateMode: 'translate',
         defaultTargetLanguage: utils.defaultTargetLanguage,
@@ -181,6 +218,9 @@ export function Settings(props: IPopupProps) {
                         initialValues={values}
                         onValuesChange={onChange}
                     >
+                        <FormItem name='provider' label='Default Service Provider'>
+                            <ProviderSelector />
+                        </FormItem>
                         <FormItem
                             required
                             name='apiKeys'
@@ -203,6 +243,9 @@ export function Settings(props: IPopupProps) {
                             <Input autoFocus type='password' size='compact' />
                         </FormItem>
                         <FormItem required name='apiURL' label='API URL'>
+                            <Input size='compact' />
+                        </FormItem>
+                        <FormItem required name='apiURLPath' label='API URL Path'>
                             <Input size='compact' />
                         </FormItem>
                         <FormItem name='defaultTranslateMode' label='Default Translate Mode'>

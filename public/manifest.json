@@ -28,5 +28,5 @@
 
     "permissions": ["storage", "tts"],
 
-    "host_permissions": ["https://*.openai.com/"]
+    "host_permissions": ["https://*.openai.com/", "https://*.openai.azure.com"]
 }

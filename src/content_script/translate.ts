@@ -3,7 +3,7 @@ import * as utils from '../common/utils'
 import * as lang from './lang'
 import { fetchSSE } from './utils'
 
-export type TranslateMode = 'translate' | 'polishing' | 'summarize' | 'explain-code'
+export type TranslateMode = 'translate' | 'polishing' | 'summarize' | 'explain-code' | 'explain-indictors'
 
 export interface TranslateQuery {
     text: string
@@ -82,6 +82,20 @@ export async function translate(query: TranslateQuery) {
                 } language! If the content is not code, return an error message. If the code has obvious errors, point them out.`
             }
             break
+        case 'explain-indictors':
+            systemPrompt =
+                'You are the most professional general practitioner, you can explain any indicators in the medical examination report. However, not only do you need to explain the meaning of these indicators, but also inform about the adverse consequences of deviating from them.'
+            if (toChinese) {
+                assistantPrompt =
+                    '用最简洁的语言使用中文解释此段指标。如果内容不是指标，请返回错误提示。如果指标有明显的错误，请指出。'
+            } else {
+                assistantPrompt = `explain the provided indictors in the most concise language and must use ${
+                    lang.langMap.get(query.detectTo) || query.detectTo
+                } language! If the content is not indictors, return an error message. If the indictors has obvious errors, point them out.`
+            }
+            break
+
+
     }
     const body = {
         model: 'gpt-3.5-turbo',

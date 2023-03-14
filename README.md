@@ -70,7 +70,17 @@ What began as a translation tool has now evolved to include surprisingly effecti
 6. Text-to-Speech (TTS)
 7. Available on all platforms (Windows, macOS, and Linux) for both browsers and Desktop
 
+
+<img width="200" src="https://user-images.githubusercontent.com/1206493/223917449-ed1ac19f-c43d-4b13-9888-79ba46ceb862.png" />
+    
+如果以上还是不行，可以采用一下命令行，打开终端，输入以下命令
+```shell
+# 输入密码，回车即可
+sudo xattr -r -d com.apple.quarantine /Applications/OpenAI\ Translator.app/
+```
+
 # Installation(Desktop App)
+
 
 1. Download zip package per OS from [Release](https://github.com/yetone/openai-translator/releases)
 
